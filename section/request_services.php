@@ -544,17 +544,21 @@ function printCanvas() {
             .then(response => {
                 if (response.success) {
                     console.log("✅ Request updated to CLAIMABLE.");
-                    location.reload();
+                    location.reload(); // optional
                 } else {
                     console.error("❌ Update failed:", response.error);
                 }
             })
             .catch(err => console.error("❌ Fetch error:", err));
+
+            // cleanup: tanggalin yung event handler para di ma-trigger sa ibang prints
+            window.onafterprint = null;
         };
     };
 
     document.body.appendChild(iframe);
 }
+
 
 
 function declineRequest() {
