@@ -1,20 +1,19 @@
-# Use PHP with Apache
+# Gumamit ng official PHP + Apache image
 FROM php:8.2-apache
 
-# Enable Apache rewrite module (optional, needed if you want clean URLs)
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Set working directory inside the container
-WORKDIR /var/www/html
-
-# Copy your entire website into the container
-COPY . /var/www/html/
-
-# Install mysqli (needed for MySQL DB connections)
+# Install mysqli (since ginagamit mo MySQLi, hindi PDO)
 RUN docker-php-ext-install mysqli
 
-# Expose default Apache port
-EXPOSE 80
+# Copy project files
+COPY . /var/www/html/
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Set working directory
+WORKDIR /var/www/html
+
+# Set proper permissions para sa uploads
+RUN mkdir -p /var/www/html/pdf_templates \
+    && chown -R www-data:www-data /var/www/html/pdf_templates \
+    && chmod -R 775 /var/www/html/pdf_templates
