@@ -1,7 +1,5 @@
-
 <?php
 session_start();
-
 // ✅ Check kung naka-login
 if (!isset($_SESSION['user_id'])) {
     // Redirect to login page
