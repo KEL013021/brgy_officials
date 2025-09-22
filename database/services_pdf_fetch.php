@@ -19,9 +19,8 @@ if ($row = $result->fetch_assoc()) {
     $pdfUrl = null;
 
     if (!empty($row['pdf_template'])) {
-        // ✅ Absolute URL para sure na accessible
-        $baseUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}/BRGYGO/pdf_templates/";
-        $pdfUrl = $baseUrl . $row['pdf_template'];
+        // ✅ Use relative path para automatic na HTTPS or HTTP depende sa page
+        $pdfUrl = "/pdf_templates/" . $row['pdf_template'];
     }
 
     echo json_encode([
