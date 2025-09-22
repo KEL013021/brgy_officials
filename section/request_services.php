@@ -530,11 +530,14 @@ function printCanvas() {
     iframe.src = pdfUrl;
 
     iframe.onload = () => {
+        console.log("📄 PDF loaded, sending to printer...");
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
 
-        // Attach afterprint sa current window
-        window.onafterprint = () => {
+        // Fallback: wait 1s after calling print, then update DB
+        setTimeout(() => {
+            console.log("📤 Sending update with ID:", window.currentRequestId);
+
             fetch("../database/request_update_status.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -551,9 +554,9 @@ function printCanvas() {
             })
             .catch(err => console.error("❌ Fetch error:", err));
 
-            // cleanup: tanggalin yung event handler para di ma-trigger sa ibang prints
-            window.onafterprint = null;
-        };
+            // Cleanup iframe
+            document.body.removeChild(iframe);
+        }, 1000); // 1 second delay (adjust if needed)
     };
 
     document.body.appendChild(iframe);
