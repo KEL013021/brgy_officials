@@ -68,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // ✅ Execute query
     if ($stmt->execute()) {
-        echo "success";
+        header("Location: ../section/evacuation.php"); // redirect sa ibang file
+        exit(); // laging mag-exit pagkatapos ng header redirect
     } else {
         echo "error: " . $conn->error;
     }
