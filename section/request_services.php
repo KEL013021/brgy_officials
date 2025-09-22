@@ -523,36 +523,39 @@ function printCanvas() {
     }
 
     const pdfUrl = `../database/request_fetch.php?id=${window.currentRequestId}`;
-    const newTab = window.open(pdfUrl, "_blank");
 
-    if (newTab) {
-        // Attach print events sa newTab
-        newTab.onload = () => {
-            newTab.onafterprint = () => {
-                // ✅ Update database status to CLAIMABLE after printing
-                fetch("../database/request_update_status.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: window.currentRequestId })
-                })
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success) {
-                        console.log("✅ Request updated to CLAIMABLE.");
-                        location.reload(); // optional: reload table
-                    } else {
-                        console.error("❌ Update failed:", response.error);
-                    }
-                })
-                .catch(err => console.error("❌ Fetch error:", err));
-            };
+    // Create hidden iframe
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = pdfUrl;
 
-            newTab.print();
+    iframe.onload = () => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+
+        // Attach afterprint sa current window
+        window.onafterprint = () => {
+            fetch("../database/request_update_status.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: window.currentRequestId })
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.success) {
+                    console.log("✅ Request updated to CLAIMABLE.");
+                    location.reload();
+                } else {
+                    console.error("❌ Update failed:", response.error);
+                }
+            })
+            .catch(err => console.error("❌ Fetch error:", err));
         };
-    } else {
-        alert("⚠️ Please allow popups to print the PDF.");
-    }
+    };
+
+    document.body.appendChild(iframe);
 }
+
 
 function declineRequest() {
     if (!window.currentRequestId) {
