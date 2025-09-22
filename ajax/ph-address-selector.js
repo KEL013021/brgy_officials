@@ -26,7 +26,7 @@
             setPlaceholder(barangay, 'Choose Barangay');
 
             // load provinces
-            var url = '/BRGYGO/ajax/ph-json/province.json';
+            var url = '/ajax/ph-json/province.json';
             $.getJSON(url, function (data) {
                 var result = data.filter(value => value.region_code == region_code);
 
@@ -57,7 +57,7 @@
             setPlaceholder(city, 'Choose City/Municipality');
             setPlaceholder(barangay, 'Choose Barangay');
 
-            var url = '/BRGYGO/ajax/ph-json/city.json';
+            var url = '/ajax/ph-json/city.json';
             $.getJSON(url, function (data) {
                 var result = data.filter(value => value.province_code == province_code);
 
@@ -84,7 +84,7 @@
             let barangay = $('#barangay');
             setPlaceholder(barangay, 'Choose Barangay');
 
-            var url = '/BRGYGO/ajax/ph-json/barangay.json';
+            var url = '/ajax/ph-json/barangay.json';
             $.getJSON(url, function (data) {
                 var result = data.filter(value => value.city_code == city_code);
 
@@ -118,7 +118,7 @@
         let dropdown = $('#region');
         setPlaceholder(dropdown, 'Choose Region');
 
-        const url = '/BRGYGO/ajax/ph-json/region.json';
+        const url = '/ajax/ph-json/region.json';
         $.getJSON(url, function (data) {
             $.each(data, function (key, entry) {
                 dropdown.append(
