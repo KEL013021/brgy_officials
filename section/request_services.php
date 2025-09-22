@@ -516,6 +516,7 @@ function openPdfPreview(requestId) {
         });
 }
 
+    
 function printCanvas() {
     if (!window.currentRequestId) {
         alert("⚠️ No request selected to print.");
@@ -524,20 +525,16 @@ function printCanvas() {
 
     const pdfUrl = `../database/request_fetch.php?id=${window.currentRequestId}`;
 
-    // Create hidden iframe
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
     iframe.src = pdfUrl;
 
     iframe.onload = () => {
-        console.log("📄 PDF loaded, sending to printer...");
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
 
-        // Fallback: wait 1s after calling print, then update DB
+        // Instead of onafterprint, use timeout fallback
         setTimeout(() => {
-            console.log("📤 Sending update with ID:", window.currentRequestId);
-
             fetch("../database/request_update_status.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -547,22 +544,20 @@ function printCanvas() {
             .then(response => {
                 if (response.success) {
                     console.log("✅ Request updated to CLAIMABLE.");
-                    location.reload(); // optional
+                    location.reload();
                 } else {
                     console.error("❌ Update failed:", response.error);
                 }
             })
             .catch(err => console.error("❌ Fetch error:", err));
 
-            // Cleanup iframe
+            // cleanup
             document.body.removeChild(iframe);
-        }, 1000); // 1 second delay (adjust if needed)
+        }, 1000); // wait 1 second after print call
     };
 
     document.body.appendChild(iframe);
 }
-
-
 
 function declineRequest() {
     if (!window.currentRequestId) {
