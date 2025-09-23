@@ -84,7 +84,7 @@ $stmt->bind_param(
 
 
 if ($stmt->execute()) {
-    echo "<script>alert('Resident added successfully!'); window.location.href='../section/residents.php';</script>";
+    echo "<script>alert('Resident added successfully!'); window.location.href='../section/barangay_resident.php';</script>";
 } else {
     echo "Error: " . $stmt->error;
 }
