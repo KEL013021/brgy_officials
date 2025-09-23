@@ -18,7 +18,7 @@ $stmtAddr->execute();
 $resultAddr = $stmtAddr->get_result();
 
 if ($rowAddr = $resultAddr->fetch_assoc()) {
-    $address_id = $rowAddr['address_id']; // adjust if column is "address_id"
+    $address_id = $rowAddr['address_id'];
 } else {
     die("❌ No address record found for this user.");
 }
@@ -28,9 +28,9 @@ $service_name    = $_POST['service_name'];
 $fee             = $_POST['fee'];
 $requirements    = $_POST['requirements'];
 $description     = $_POST['description'];
-$pdf_layout_data = $_POST['pdf_layout_data'] ?? '{}';
+$pdf_layout_data = !empty($_POST['pdf_layout_data']) ? $_POST['pdf_layout_data'] : NULL;
 
-$pdf_filename = '';
+$pdf_filename = NULL; // ✅ default to NULL
 
 // ✅ Handle file upload
 if (isset($_FILES['pdf_template']) && $_FILES['pdf_template']['error'] === UPLOAD_ERR_OK) {
@@ -65,13 +65,16 @@ if ($check_result->num_rows > 0) {
 $stmt = $conn->prepare("INSERT INTO services 
     (service_name, service_fee, requirements, description, pdf_layout_data, pdf_template, address_id) 
     VALUES (?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sdssssi", 
-    $service_name, 
-    $fee, 
-    $requirements, 
-    $description, 
-    $pdf_layout_data, 
-    $pdf_filename, 
+
+// Use bind_param with "s" even for NULL (mysqli will insert proper NULL automatically)
+$stmt->bind_param(
+    "sdssssi",
+    $service_name,
+    $fee,
+    $requirements,
+    $description,
+    $pdf_layout_data,
+    $pdf_filename,
     $address_id
 );
 
