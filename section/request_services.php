@@ -532,35 +532,40 @@ function printCanvas() {
     iframe.onload = () => {
         const printWindow = iframe.contentWindow;
 
-        // bind afterprint listener
+        // ✅ After print dialog closes
         printWindow.onafterprint = () => {
-            fetch("../database/request_update_status.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: window.currentRequestId })
-            })
-            .then(res => res.json())
-            .then(response => {
-                if (response.success) {
-                    console.log("✅ Request updated to CLAIMABLE.");
-                    location.reload();
-                } else {
-                    console.error("❌ Update failed:", response.error);
-                }
-            })
-            .catch(err => console.error("❌ Fetch error:", err));
+            if (confirm("🖨️ Did the document successfully print?")) {
+                fetch("../database/request_update_status.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: window.currentRequestId })
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.success) {
+                        console.log("✅ Request updated to CLAIMABLE.");
+                        location.reload();
+                    } else {
+                        console.error("❌ Update failed:", response.error);
+                    }
+                })
+                .catch(err => console.error("❌ Fetch error:", err));
+            } else {
+                console.log("❌ User cancelled print confirmation, no update made.");
+            }
 
             // cleanup
             document.body.removeChild(iframe);
         };
 
-        // open print dialog
+        // ✅ Open print dialog
         printWindow.focus();
         printWindow.print();
     };
 
     document.body.appendChild(iframe);
 }
+
 
 
 function declineRequest() {
