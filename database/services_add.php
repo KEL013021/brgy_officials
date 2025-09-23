@@ -28,7 +28,7 @@ $service_name    = $_POST['service_name'];
 $fee             = $_POST['fee'];
 $requirements    = $_POST['requirements'];
 $description     = $_POST['description'];
-$pdf_layout_data = $_POST['pdf_layout_data'];
+$pdf_layout_data = $_POST['pdf_layout_data'] ?? '';
 
 $pdf_filename = '';
 
