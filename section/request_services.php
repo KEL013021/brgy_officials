@@ -254,9 +254,28 @@ $result = $stmt->get_result();
                 </div>
             </div>
             <div class="modal-footer justify-content-end">
-                <button class="btn btn-danger btn-lg rounded-3 px-4 py-2 shadow-sm align-items-center justify-content-center gap-2" onclick="declineRequest()" style="color: black; width:150px;"><i class="bi bi-file-earmark-x"></i> Decline</button>
-                <button class="btn btn-primary btn-lg rounded-3 px-4 py-2 shadow-sm align-items-center justify-content-center gap-2" onclick="printCanvas()"  style="color: black; width:150px;"><i class="bi bi-printer" ></i> Print</button>
+                <button class="btn btn-danger btn-lg rounded-3 px-4 py-2 shadow-sm align-items-center justify-content-center gap-2" 
+                        onclick="declineRequest()" 
+                        style="color: black; width:150px;">
+                    <i class="bi bi-file-earmark-x"></i> Decline
+                </button>
+            
+                <button id="printBtn" 
+                        class="btn btn-primary btn-lg rounded-3 px-4 py-2 shadow-sm align-items-center justify-content-center gap-2" 
+                        onclick="printCanvas()"  
+                        style="color: black; width:150px;">
+                    <i class="bi bi-printer"></i> Print
+                </button>
+            
+                <!-- ✅ Hidden by default -->
+                <button id="confirmPrintBtn" 
+                        class="btn btn-success btn-lg rounded-3 px-4 py-2 shadow-sm align-items-center justify-content-center gap-2" 
+                        style="width:220px; display:none;" 
+                        onclick="confirmPrinted()">
+                    <i class="bi bi-check-circle"></i> Mark as Printed
+                </button>
             </div>
+
         </div>
     </div>
 </div>
@@ -524,48 +543,44 @@ function printCanvas() {
     }
 
     const pdfUrl = `../database/request_fetch.php?id=${window.currentRequestId}`;
-
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
     iframe.src = pdfUrl;
 
     iframe.onload = () => {
-        const printWindow = iframe.contentWindow;
+        // Open print dialog
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
 
-        // ✅ After print dialog closes
-        printWindow.onafterprint = () => {
-            if (confirm("🖨️ Did the document successfully print?")) {
-                fetch("../database/request_update_status.php", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: window.currentRequestId })
-                })
-                .then(res => res.json())
-                .then(response => {
-                    if (response.success) {
-                        console.log("✅ Request updated to CLAIMABLE.");
-                        location.reload();
-                    } else {
-                        console.error("❌ Update failed:", response.error);
-                    }
-                })
-                .catch(err => console.error("❌ Fetch error:", err));
-            } else {
-                console.log("❌ User cancelled print confirmation, no update made.");
-            }
+        // ✅ Show the "Mark as Printed" button beside Print
+        const confirmBtn = document.getElementById("confirmPrintBtn");
+        if (confirmBtn) confirmBtn.style.display = "inline-flex";
 
-            // cleanup
-            document.body.removeChild(iframe);
-        };
-
-        // ✅ Open print dialog
-        printWindow.focus();
-        printWindow.print();
+        // cleanup iframe
+        setTimeout(() => document.body.removeChild(iframe), 2000);
     };
 
     document.body.appendChild(iframe);
 }
 
+// ✅ Update request when "Mark as Printed" is clicked
+function confirmPrinted() {
+    fetch("../database/request_update_status.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: window.currentRequestId })
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success) {
+            console.log("✅ Request updated to CLAIMABLE.");
+            location.reload();
+        } else {
+            console.error("❌ Update failed:", response.error);
+        }
+    })
+    .catch(err => console.error("❌ Fetch error:", err));
+}
 
 
 function declineRequest() {
