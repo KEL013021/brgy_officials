@@ -57,7 +57,7 @@ $check->execute();
 $check_result = $check->get_result();
 
 if ($check_result->num_rows > 0) {
-    echo "<script>window.location.href='../pages/services.php?exists=true';</script>";
+    echo "<script>window.location.href='../section/services.php?exists=true';</script>";
     exit;
 }
 
