@@ -530,11 +530,10 @@ function printCanvas() {
     iframe.src = pdfUrl;
 
     iframe.onload = () => {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        const printWindow = iframe.contentWindow;
 
-        // Instead of onafterprint, use timeout fallback
-        setTimeout(() => {
+        // bind afterprint listener
+        printWindow.onafterprint = () => {
             fetch("../database/request_update_status.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -553,11 +552,16 @@ function printCanvas() {
 
             // cleanup
             document.body.removeChild(iframe);
-        }, 1000); // wait 1 second after print call
+        };
+
+        // open print dialog
+        printWindow.focus();
+        printWindow.print();
     };
 
     document.body.appendChild(iframe);
 }
+
 
 function declineRequest() {
     if (!window.currentRequestId) {
