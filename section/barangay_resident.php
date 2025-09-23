@@ -764,9 +764,23 @@ if ($result->num_rows > 0) {
               <h5 class="fw-bold text-primary mb-3"><i class="bi bi-mortarboard-fill me-2"></i> Education & Employment</h5>
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label fw-semibold">Educational Attainment</label>
-                  <input type="text" class="form-control rounded-3" name="view_educational_attainment" id="view_educational_attainment">
-                </div>
+                    <label class="form-label fw-semibold">Educational Attainment</label>
+                    <select class="form-select rounded-3" name="view_educational_attainment" id="view_educational_attainment">
+                      <option value="" disabled selected>-- Select --</option>
+                      <option value="No Formal Education">No Formal Education</option>
+                      <option value="Preschool">Preschool</option>
+                      <option value="Elementary Level">Elementary Level</option>
+                      <option value="Elementary Graduate">Elementary Graduate</option>
+                      <option value="High School Level">High School Level</option>
+                      <option value="High School Graduate">High School Graduate</option>
+                      <option value="Senior High School Level">Senior High School Level</option>
+                      <option value="Senior High School Graduate">Senior High School Graduate</option>
+                      <option value="Vocational/Technical">Vocational/Technical</option>
+                      <option value="College Level">College Level</option>
+                      <option value="College Graduate">College Graduate</option>
+                      <option value="Post Graduate">Post Graduate</option>
+                    </select>
+                  </div>
                 <div class="col-md-4">
                   <label class="form-label fw-semibold">Current School</label>
                   <input type="text" class="form-control rounded-3" name="view_current_school" id="view_current_school">
