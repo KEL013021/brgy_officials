@@ -555,9 +555,6 @@ function printCanvas() {
         // ✅ Show the "Mark as Printed" button beside Print
         const confirmBtn = document.getElementById("confirmPrintBtn");
         if (confirmBtn) confirmBtn.style.display = "inline-flex";
-
-        // cleanup iframe
-        setTimeout(() => document.body.removeChild(iframe), 2000);
     };
 
     document.body.appendChild(iframe);
@@ -581,6 +578,12 @@ function confirmPrinted() {
     })
     .catch(err => console.error("❌ Fetch error:", err));
 }
+
+// ✅ Reset "Mark as Printed" button every time modal closes
+document.getElementById('pdfPreviewModal').addEventListener('hidden.bs.modal', () => {
+    const confirmBtn = document.getElementById("confirmPrintBtn");
+    if (confirmBtn) confirmBtn.style.display = "none";
+});
 
 
 function declineRequest() {
