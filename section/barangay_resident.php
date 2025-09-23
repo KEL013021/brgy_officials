@@ -392,9 +392,23 @@ if ($result->num_rows > 0) {
               </h5>
               <div class="row g-3">
                 <div class="col-md-4">
-                  <label class="form-label fw-semibold">Educational Attainment</label>
-                  <input type="text" class="form-control rounded-3" name="educational_attainment">
-                </div>
+                    <label class="form-label fw-semibold">Educational Attainment</label>
+                    <select class="form-select rounded-3" name="educational_attainment" required>
+                      <option value="">-- Select Educational Attainment --</option>
+                      <option value="No Formal Education">No Formal Education</option>
+                      <option value="Elementary Level">Elementary Level</option>
+                      <option value="Elementary Graduate">Elementary Graduate</option>
+                      <option value="High School Level">High School Level</option>
+                      <option value="High School Graduate">High School Graduate</option>
+                      <option value="Senior High School Level">Senior High School Level</option>
+                      <option value="Senior High School Graduate">Senior High School Graduate</option>
+                      <option value="Vocational / Technical / TESDA">Vocational / Technical / TESDA</option>
+                      <option value="College Level">College Level (Undergraduate)</option>
+                      <option value="College Graduate">College Graduate (Bachelor’s Degree)</option>
+                      <option value="Postgraduate / Master’s Degree">Postgraduate / Master’s Degree</option>
+                      <option value="Doctorate / PhD">Doctorate / PhD</option>
+                    </select>
+                  </div>
                 <div class="col-md-4">
                   <label class="form-label fw-semibold">Current School</label>
                   <input type="text" class="form-control rounded-3" name="current_school">
